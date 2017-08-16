@@ -119,6 +119,7 @@ CORE_SRC +=	src/zjs_ocf_common.c \
 
 LINUX_INCLUDES += 	-I$(OCF_ROOT)/deps/tinydtls \
 			-I$(OCF_ROOT)/deps/tinycbor/src \
+			-include $(ZJS_BASE)/$(OCF_ROOT)/port/linux/config.h \
 			-I$(OCF_ROOT) \
 			-I$(OCF_ROOT)/port/linux \
 			-I$(OCF_ROOT)/include \

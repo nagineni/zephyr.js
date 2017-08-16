@@ -4,10 +4,37 @@ CORE_SRC +=	$(OCF_ROOT)/deps/tinycbor/src/cborencoder.c \
 		$(OCF_ROOT)/deps/tinycbor/src/cborencoder_close_container_checked.c \
 		$(OCF_ROOT)/deps/tinycbor/src/cborparser.c
 
+ifeq ($(SECURE), 1)
+CORE_SRC += $(OCF_ROOT)/deps/tinydtls/ccm.c \
+        $(OCF_ROOT)/deps/tinydtls/hmac.c \
+        $(OCF_ROOT)/deps/tinydtls/netq.c \
+        $(OCF_ROOT)/deps/tinydtls/peer.c \
+        $(OCF_ROOT)/deps/tinydtls/dtls_time.c \
+        $(OCF_ROOT)/deps/tinydtls/session.c \
+        $(OCF_ROOT)/deps/tinydtls/sha2/sha2.c \
+        $(OCF_ROOT)/deps/tinydtls/ecc/ecc.c \
+        $(OCF_ROOT)/deps/tinydtls/aes/rijndael.c \
+        $(OCF_ROOT)/deps/tinydtls/crypto.c \
+        $(OCF_ROOT)/deps/tinydtls/dtls.c
+endif
+
+
 CORE_SRC +=		$(wildcard $(OCF_ROOT)/util/*.c) ${CBOR}
 CORE_SRC +=		$(wildcard $(OCF_ROOT)/messaging/coap/*.c)
 CORE_SRC +=		$(wildcard $(OCF_ROOT)/api/*.c)
 CORE_SRC +=		$(wildcard $(OCF_ROOT)/port/linux/*.c)
+
+ifeq ($(SECURE), 1)
+CORE_SRC +=		$(wildcard $(OCF_ROOT)/security/*.c)
+LINUX_FLAGS += -DWITH_OCF \
+        -DOC_SECURITY \
+        -DDTLSV12 \
+        -DWITH_SHA256 \
+        -DDTLS_CHECK_CONTENTTYPE \
+        -DNDEBUG \
+        -Wno-error=strict-aliasing \
+        -Wno-unused-variable
+endif
 
 LINUX_FLAGS +=	-fno-asynchronous-unwind-tables \
 		-fno-omit-frame-pointer \
